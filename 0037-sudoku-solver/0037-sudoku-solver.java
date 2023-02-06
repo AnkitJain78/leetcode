@@ -1,34 +1,29 @@
 class Solution {
     public void solveSudoku(char[][] board) {
-        char[][] finalBoard = new char[9][9];
-        sudokuSolver(board, 0, 0, finalBoard);
-        for(int i = 0; i < 9; i++)
-                board[i] = Arrays.copyOfRange(finalBoard[i],0,9);
+        sudokuSolver(board, 0, 0);
     }
-    static void sudokuSolver(char[][] board, int r, int c, char[][] finalBoard){
-        if(r==board.length - 1 && c==board[0].length)
-        {
+    static boolean sudokuSolver(char[][] board, int r, int c){
+        if(r==board.length - 1 && c==board[0].length) {
             if(isAllFilled(board))
-                //display(board);
-                for(int i = 0; i < 9; i++)
-                    finalBoard[i] = Arrays.copyOfRange(board[i],0,9);
-            return;
+                return true;
         }
+        
         if(c==board[0].length){
-            sudokuSolver(board, r+1, 0,finalBoard);
-            return;
+            return sudokuSolver(board, r+1, 0);
         }
+        
         if(board[r][c] == '.'){
             for(int i = 1; i <= 9; i++){
                 if(isSafeNo(i,board,r,c)){
                     board[r][c]=(char) (i + '0');
-                    sudokuSolver(board, r, c+1,finalBoard);
+                    if(sudokuSolver(board, r, c+1))
+                        return true;
                     board[r][c]='.';
                 }
             }
         }
-        else
-            sudokuSolver(board, r, c+1, finalBoard);
+        else return sudokuSolver(board, r, c + 1);
+        return false;
     }
 
     static boolean isAllFilled(char[][] board){
